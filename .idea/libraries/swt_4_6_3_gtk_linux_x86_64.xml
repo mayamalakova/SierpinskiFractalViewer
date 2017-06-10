@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="swt-4.6.3-gtk-linux-x86_64">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/../swt-4.6.3-gtk-linux-x86_64.zip_expanded" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/../swt-4.6.3-gtk-linux-x86_64.zip_expanded" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/../swt-4.6.3-gtk-linux-x86_64.zip_expanded" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/../swt-4.6.3-gtk-linux-x86_64.zip_expanded" recursive="false" type="SOURCES" />
+  </library>
+</component>
