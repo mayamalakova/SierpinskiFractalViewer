@@ -37,8 +37,6 @@ public class Triangle {
      * @param graphics the graphics instance to use for drawing
      */
     public void draw(final GC graphics) {
-        drawBorder(graphics);
-
         if (minSize < size) {
             createChildren();
             leftChild.draw(graphics);
@@ -79,11 +77,6 @@ public class Triangle {
         leftChild = new Triangle(new Edge(left), size / 2, minSize - 1);
         rightChild = new Triangle(left.bottomMedian(size), size / 2, minSize - 1);
         topChild = new Triangle(new Edge(leftChild.top), size / 2, minSize - 1);
-    }
-
-    private void drawBorder(final GC graphics) {
-        //todo rotate it - left.x, left.y -
-        graphics.drawPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
 
     public Edge getLeft() {

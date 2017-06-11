@@ -15,6 +15,11 @@ public class SierpinskiViewerApplication {
 
     private Triangle rootTriangle;
     private Label positionLabel;
+    private int startX;
+    private int startY;
+    private boolean drag;
+    private int endX;
+    private int endY;
 
     public SierpinskiViewerApplication(final Shell shell) {
         this.shell = shell;
@@ -81,11 +86,12 @@ public class SierpinskiViewerApplication {
         addResetButton(toolbox);
     }
 
-
     private void drawCanvas(final Composite composite) {
         final Composite canvasContainer = new Composite(composite, SWT.NONE);
         canvas = new Canvas(canvasContainer, SWT.NONE);
         canvas.setSize(700, 700);
+
+        addMouseListener();
 
         initRootTriangle();
         final PaintListener paintListener = event -> {
@@ -150,7 +156,6 @@ public class SierpinskiViewerApplication {
         });
     }
 
-
     private void addPositionIndicator(final Composite toolbox) {
         positionLabel = new Label(toolbox, SWT.CENTER);
         positionLabel.setLayoutData(new RowData(150, 30));
@@ -179,6 +184,26 @@ public class SierpinskiViewerApplication {
             @Override
             public void widgetDefaultSelected(final SelectionEvent e) {
                 widgetSelected(e);
+            }
+        });
+    }
+
+    private void addMouseListener() {
+        canvas.addListener(SWT.MouseDown, event -> {
+            startX = event.x;
+            startY = event.y;
+            drag = true;
+        });
+
+        canvas.addListener(SWT.MouseUp, event -> {
+            if (drag) {
+                endX = event.x;
+                endY = event.y;
+                drag = false;
+                rootTriangle.shiftX(endX - startX);
+                rootTriangle.shiftY(endY - startY);
+                positionLabel.setText(rootTriangle.getLeft().toString());
+                canvas.redraw();
             }
         });
     }
