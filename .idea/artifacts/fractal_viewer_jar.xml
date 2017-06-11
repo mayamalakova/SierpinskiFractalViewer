@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact name="fractal-viewer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/fractal_viewer_jar</output-path>
+    <root id="root">
+      <element id="archive" name="fractal-viewer.jar">
+        <element id="module-output" name="fractal-viewer" />
+      </element>
+      <element id="library" level="module" name="JUnit4" module-name="fractal-viewer" />
+      <element id="library" level="project" name="swt-4.6.3-gtk-linux-x86_64" />
+    </root>
+  </artifact>
+</component>

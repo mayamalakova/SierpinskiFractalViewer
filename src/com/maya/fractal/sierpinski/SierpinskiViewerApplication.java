@@ -5,7 +5,10 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.*;
 
 public class SierpinskiViewerApplication {
@@ -43,26 +46,44 @@ public class SierpinskiViewerApplication {
     }
 
     private void renderUi(Shell shell) {
-		shell.setLayout(new FillLayout());
+        RowLayout rowLayout = new RowLayout();
+        rowLayout.type = SWT.VERTICAL;
+        rowLayout.wrap = true;
 
+        shell.setLayout(rowLayout);
+
+        drawButtons(shell);
 		drawCanvas(shell);
 
-		shell.setSize(500, 500);
+		shell.setSize(800, 800);
 	}
 
-	private void drawCanvas(Shell shell) {
-        canvas = new Canvas(shell, SWT.NONE);
+    private void drawButtons(Composite composite) {
+        Composite toolbox = new Composite(composite, SWT.NONE);
+        RowLayout layout = new RowLayout();
+        layout.marginHeight = 5;
+        layout.spacing = 5;
+        toolbox.setLayout(layout);
+        addZoomInButton(toolbox);
+        addZoomOutButton(toolbox);
 
-        addZoomInButton();
-        addZoomOutButton();
-        addZoomLevelIndicator();
+        addZoomLevelIndicator(toolbox);
 
-        addButtonUp();
-        addButtonDown();
-        addButtonLeft();
-        addButtonRight();
+        Label separator = new Label(toolbox, SWT.VERTICAL | SWT.SEPARATOR);
+        separator.setLayoutData(new RowData(10, 30));
 
-        rootTriangle = new Triangle(0, 30, 400, 20);
+        addButtonUp(toolbox);
+        addButtonDown(toolbox);
+        addButtonLeft(toolbox);
+        addButtonRight(toolbox);
+    }
+
+    private void drawCanvas(Composite composite) {
+        Composite canvasContainer = new Composite(composite, SWT.NONE);
+        canvas = new Canvas(canvasContainer, SWT.NONE);
+        canvas.setSize(700, 700);
+
+        rootTriangle = new Triangle(0, 30, 600, 20);
         final PaintListener paintListener = event -> {
             event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_RED));
             rootTriangle.draw(event.gc);
@@ -71,44 +92,66 @@ public class SierpinskiViewerApplication {
 		canvas.addPaintListener(paintListener);
 	}
 
-    private void addZoomLevelIndicator() {
-        zoomLabel = new Label(canvas, SWT.CENTER);
-        zoomLabel.setBounds(80, 5, 120, 30);
-        updateZoomLevel(0);
-    }
-
-    private void addZoomOutButton() {
-        Button zoomOut = new Button(canvas, SWT.PUSH);
-        zoomOut.setBounds(40, 0, 30, 30);
-        zoomOut.setText("-");
-        zoomOut.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                updateZoomLevel(-20);
-                rootTriangle.zoom(-20);
-                canvas.redraw();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
+    private void addZoomInButton(Composite container) {
+        Button zoomIn = createButton(container, " + ");
+        addButtonListener(zoomIn, e -> {
+            updateZoomLevel(20);
+            rootTriangle.zoom(20);
         });
     }
 
-    private void addZoomInButton() {
-        Button zoomIn = new Button(canvas, SWT.PUSH);
-        zoomIn.setBounds(0, 0, 30, 30);
-        zoomIn.setText("+");
-        zoomIn.addSelectionListener(new SelectionListener() {
+    private void addZoomOutButton(Composite container) {
+        Button zoomOut = createButton(container, " - ");
+        addButtonListener(zoomOut, e -> {
+            updateZoomLevel(-20);
+            rootTriangle.zoom(-20);
+        });
+    }
+
+    private void addZoomLevelIndicator(Composite container) {
+        zoomLabel = new Label(container, SWT.CENTER);
+        zoomLabel.setLayoutData(new RowData(150, 40));
+        updateZoomLevel(0);
+    }
+
+    private void addButtonUp(Composite container) {
+        Button up = createButton(container, "↑");
+        addButtonListener(up, e -> rootTriangle.shiftY(-20));
+    }
+
+    private void addButtonDown(Composite container) {
+        Button down = createButton(container, "↓");
+        addButtonListener(down, e -> rootTriangle.shiftY(20));
+    }
+
+    private void addButtonLeft(Composite container) {
+        Button left = createButton(container, "←");
+        addButtonListener(left, e -> rootTriangle.shiftX(-20));
+    }
+
+    private void addButtonRight(Composite container) {
+        Button right = createButton(container, "→");
+        addButtonListener(right, e -> rootTriangle.shiftX(20));
+    }
+
+    private Button createButton(Composite container, String label) {
+        Button button = new Button(container, SWT.PUSH);
+        button.setText(label);
+        button.setLayoutData(new RowData(30, 30));
+        return button;
+    }
+
+    private void addButtonListener(Button button, ISelectionListener listener) {
+        button.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                updateZoomLevel(20);
-                rootTriangle.zoom(20);
+                listener.onSelection(e);
                 canvas.redraw();
             }
 
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
             }
         });
     }
@@ -117,73 +160,9 @@ public class SierpinskiViewerApplication {
         zoomLevel = zoomLevel + adjustment;
         zoomLabel.setText("Zoom level: " + zoomLevel + "%");
     }
+}
 
-    private void addButtonUp() {
-        Button up = new Button(canvas, SWT.PUSH);
-        up.setBounds(200, 0, 30, 30);
-        up.setText("↑");
-        up.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                rootTriangle.shiftY(-20);
-                canvas.redraw();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-        });
-    }
-
-    private void addButtonDown() {
-        Button down = new Button(canvas, SWT.PUSH);
-        down.setBounds(230, 0, 30, 30);
-        down.setText("↓");
-        down.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                rootTriangle.shiftY(20);
-                canvas.redraw();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-        });
-
-    }
-
-    private void addButtonLeft() {
-        Button left = new Button(canvas, SWT.PUSH);
-        left.setBounds(260, 0, 30, 30);
-        left.setText("←");
-        left.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                rootTriangle.shiftX(-20);
-                canvas.redraw();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-        });
-    }
-
-    private void addButtonRight() {
-        Button right = new Button(canvas, SWT.PUSH);
-        right.setBounds(290, 0, 30, 30);
-        right.setText("→");
-        right.addSelectionListener(new SelectionListener() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                rootTriangle.shiftX(20);
-                canvas.redraw();
-            }
-
-            @Override
-            public void widgetDefaultSelected(SelectionEvent e) {
-            }
-        });
-    }
+@FunctionalInterface
+interface ISelectionListener {
+    void onSelection(SelectionEvent e);
 }
