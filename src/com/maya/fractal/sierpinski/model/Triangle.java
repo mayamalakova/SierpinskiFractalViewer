@@ -3,68 +3,50 @@ package com.maya.fractal.sierpinski.model;
 import org.eclipse.swt.graphics.GC;
 
 /**
- * Created by maja on 10/06/17.
+ * A triangle
  */
 public class Triangle {
-    private final double SIN_60 = Math.sqrt(3)/2;
     Edge top, left, right;
-    int size;
+    double size;
+    double minSize;
     Triangle topChild, leftChild, rightChild;
-    Triangle parent;
-    int level;
 
-    public Triangle(int x1, int y1, int length, int level) {
-        int x2 = x1 + length;
-        int y2 = (int) (y1 + length * SIN_60);
-        this.size = length;
-        this.left = new Edge(x1, y1);
-        this.right = new Edge(x2, y1);
-        this.top = new Edge(x1 + size/2, y2);
-        this.level = level;
+    public Triangle(double x1, double y1, double size, double minSize) {
+        this(new Edge(x1, y1), size, minSize);
+    }
 
-        if (level > 0) {
+    public Triangle(Edge left, double size, double minSize) {
+        this.size = size;
+        this.left = left;
+        this.right = left.toRight(size);
+        this.top = left.toTop(size);
+        this.minSize = minSize;
+
+        if (minSize < size) {
             createChildren();
         }
     }
 
     private void createChildren() {
-        leftChild = new Triangle(new Edge(left), size / 2, level - 1);
-        rightChild = new Triangle(left.bottomMedian(left, size), size / 2, level - 1);
-        topChild = new Triangle(new Edge(leftChild.top), size / 2, level - 1);
-    }
-
-    public Triangle(Edge left, int size, int level) {
-        this.size = size;
-        this.left = left;
-        this.right = left.leftToRight(left, size);
-        this.top = left.leftToTop(left, size);
-        this.level = level;
-
-        if (level > 0) {
-            createChildren();
-        }
+        leftChild = new Triangle(new Edge(left), size / 2, minSize - 1);
+        rightChild = new Triangle(left.bottomMedian(left, size), size / 2, minSize - 1);
+        topChild = new Triangle(new Edge(leftChild.top), size / 2, minSize - 1);
     }
 
     public void zoom(int percent) {
-        float quotient = (100 + percent)/100;
-        size = (int) (size * quotient);
-        right = left.leftToRight(left, size);
-        top = left.leftToTop(left, size);
+        double quotient = (100.0 + percent)/100;
+        size = size * quotient;
+        right = left.toRight(size);
+        top = left.toTop(size);
         if (leftChild != null) {
             createChildren();
         }
     }
 
-    private void shiftX(int by) {
-        left.x = left.x + by;
-        right.x = right.x + by;
-        top.x = top.x + by;
-    }
-
     public void draw(GC graphics) {
-        graphics.drawPolygon(new int[]{left.x, left.y, top.x, top.y, right.x, right.y});
-        if (level == 0) {
-            graphics.fillPolygon(new int[]{left.x, left.y, top.x, top.y, right.x, right.y});
+        drawBorder(graphics);
+        if (leftChild == null) {
+            fill(graphics);
         }
 
         if (leftChild != null) {
@@ -72,6 +54,14 @@ public class Triangle {
             rightChild.draw(graphics);
             topChild.draw(graphics);
         }
+    }
+
+    private void fill(GC graphics) {
+        graphics.fillPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
+    }
+
+    private void drawBorder(GC graphics) {
+        graphics.drawPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
 
 }

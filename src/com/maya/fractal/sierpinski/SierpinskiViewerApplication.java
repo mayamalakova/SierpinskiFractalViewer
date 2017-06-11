@@ -60,21 +60,35 @@ public class SierpinskiViewerApplication {
         zoomIn.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                triangle.zoom(100);
+                triangle.zoom(20);
                 canvas.redraw();
             }
 
             @Override
             public void widgetDefaultSelected(SelectionEvent e) {
-
             }
         });
 
 		Button zoomOut = new Button(canvas, SWT.PUSH);
 		zoomOut.setBounds(40, 0, 30, 30);
 		zoomOut.setText("-");
+        zoomOut.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                triangle.zoom(-20);
+                canvas.redraw();
+            }
 
-        triangle = new Triangle(0, 30, 100, 1);
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+            }
+        });
+
+        Label label = new Label(canvas, SWT.NONE);
+        label.setBounds(80, 0, 100, 30);
+        label.setText("100%");
+
+        triangle = new Triangle(0, 30, 400, 20);
         final PaintListener paintListener = event -> {
             event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_RED));
             triangle.draw(event.gc);
