@@ -6,52 +6,65 @@ import org.eclipse.swt.graphics.GC;
  * Created by maja on 10/06/17.
  */
 public class Triangle {
-    Edge top, left, riht;
+    private final double SIN_60 = Math.sqrt(3)/2;
+    Edge top, left, right;
+    int size;
     Triangle topChild, leftChild, rightChild;
     Triangle parent;
     int level;
 
     public Triangle(int x1, int y1, int length, int level) {
         int x2 = x1 + length;
-        int y2 = y1 + length * 3/4;
+        int y2 = (int) (y1 + length * SIN_60);
+        this.size = length;
         this.left = new Edge(x1, y1);
-        this.riht = new Edge(x2, y1);
-        this.top = new Edge(x1 + length/2, y2);
-        System.out.format("Created %d", length);
-        System.out.println("Edges " + this.left + this.riht + this.top);
+        this.right = new Edge(x2, y1);
+        this.top = new Edge(x1 + size/2, y2);
         this.level = level;
 
         if (level > 0) {
-            createChildren(length);
+            createChildren();
         }
     }
 
-    private void createChildren(int length) {
-        leftChild = new Triangle(new Edge(left), length / 2, level - 1);
-        rightChild = new Triangle(new Edge(left.x + length/2, left.y), length / 2, level - 1);
-        topChild = new Triangle(new Edge(leftChild.top), length / 2, level - 1);
+    private void createChildren() {
+        leftChild = new Triangle(new Edge(left), size / 2, level - 1);
+        rightChild = new Triangle(left.bottomMedian(left, size), size / 2, level - 1);
+        topChild = new Triangle(new Edge(leftChild.top), size / 2, level - 1);
     }
 
-    public Triangle(Edge left, int length, int level) {
+    public Triangle(Edge left, int size, int level) {
+        this.size = size;
         this.left = left;
-        this.riht = new Edge(left.x + length, left.y);
-        this.top = new Edge(left.x + length / 2, left.y + length * 3/4);
+        this.right = left.leftToRight(left, size);
+        this.top = left.leftToTop(left, size);
         this.level = level;
 
         if (level > 0) {
-            createChildren(length);
+            createChildren();
         }
     }
 
-    public void zoomIn(int percent) {
-        // recalculate edges - top = x, y*(100 + percent)/100; left = x*(100 - percent)/100, y; right = x*(100 + percent)/100, y
-        // recalculate children
+    public void zoom(int percent) {
+        float quotient = (100 + percent)/100;
+        size = (int) (size * quotient);
+        right = left.leftToRight(left, size);
+        top = left.leftToTop(left, size);
+        if (leftChild != null) {
+            createChildren();
+        }
+    }
+
+    private void shiftX(int by) {
+        left.x = left.x + by;
+        right.x = right.x + by;
+        top.x = top.x + by;
     }
 
     public void draw(GC graphics) {
-        graphics.drawPolygon(new int[]{left.x, left.y, top.x, top.y, riht.x, riht.y});
+        graphics.drawPolygon(new int[]{left.x, left.y, top.x, top.y, right.x, right.y});
         if (level == 0) {
-            graphics.fillPolygon(new int[]{left.x, left.y, top.x, top.y, riht.x, riht.y});
+            graphics.fillPolygon(new int[]{left.x, left.y, top.x, top.y, right.x, right.y});
         }
 
         if (leftChild != null) {

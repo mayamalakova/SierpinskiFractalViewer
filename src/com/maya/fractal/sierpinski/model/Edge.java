@@ -4,6 +4,8 @@ package com.maya.fractal.sierpinski.model;
  * Created by maja on 10/06/17.
  */
 public class Edge {
+    private final double SIN_60 = Math.sqrt(3)/2;
+
     public int x, y;
 
     public Edge(int x1, int y1) {
@@ -28,5 +30,17 @@ public class Edge {
     @Override
     public String toString() {
         return String.format(" (%d, %d) ", x, y);
+    }
+
+    public Edge leftToRight(Edge left, int size) {
+        return new Edge(left.x + size, left.y);
+    }
+
+    public Edge leftToTop(Edge left, int size) {
+        return new Edge(left.x + size / 2, (int) (left.y + size * SIN_60));
+    }
+
+    public Edge bottomMedian(Edge left, int size) {
+        return new Edge(left.x + size/2, left.y);
     }
 }

@@ -3,6 +3,8 @@ package com.maya.fractal.sierpinski;
 import com.maya.fractal.sierpinski.model.Triangle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.*;
 
@@ -14,6 +16,7 @@ public class SierpinskiViewerApplication {
     private static int startY;
     private static int endX;
     private static int endY;
+    private Triangle triangle;
 
     public SierpinskiViewerApplication(Shell shell) {
         this.shell = shell;
@@ -51,18 +54,29 @@ public class SierpinskiViewerApplication {
 
 	private void drawCanvas(Shell shell) {
         canvas = new Canvas(shell, SWT.NONE);
-
 		Button zoomIn = new Button(canvas, SWT.PUSH);
 		zoomIn.setBounds(0, 0, 30, 30);
 		zoomIn.setText("+");
+        zoomIn.addSelectionListener(new SelectionListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                triangle.zoom(100);
+                canvas.redraw();
+            }
+
+            @Override
+            public void widgetDefaultSelected(SelectionEvent e) {
+
+            }
+        });
 
 		Button zoomOut = new Button(canvas, SWT.PUSH);
 		zoomOut.setBounds(40, 0, 30, 30);
 		zoomOut.setText("-");
 
-		final PaintListener paintListener = event -> {
+        triangle = new Triangle(0, 30, 100, 1);
+        final PaintListener paintListener = event -> {
             event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_RED));
-            Triangle triangle = new Triangle(0, 30, canvas.getSize().x, 5);
             triangle.draw(event.gc);
         };
 
