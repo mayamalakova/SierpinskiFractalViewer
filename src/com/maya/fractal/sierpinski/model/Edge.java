@@ -19,15 +19,6 @@ public class Edge {
         y = edge.y;
     }
 
-    /**
-     * Translates coordinates from left, top 0, 0 to left, bottom 0,0
-     * @param size
-     * @return
-     */
-    public Edge translate(double size) {
-        return new Edge(x, size - y);
-    }
-
     @Override
     public String toString() {
         return String.format(" (%f.3, %f.3) ", x, y);
@@ -41,8 +32,16 @@ public class Edge {
         return new Edge(x + size / 2, y + size * SIN_60);
     }
 
-    public Edge bottomMedian(Edge left, double size) {
-        return new Edge(left.x + size/2, left.y);
+    public Edge bottomMedian(double size) {
+        return new Edge(x + size/2, y);
+    }
+
+    public Edge shiftY(double shift) {
+        return new Edge(x, y + shift);
+    }
+
+    public Edge shiftX(double shift) {
+        return new Edge(x + shift, y);
     }
 
     @Override
