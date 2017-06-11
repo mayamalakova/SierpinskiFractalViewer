@@ -101,4 +101,8 @@ public class Triangle {
     private void drawBorder(GC graphics) {
         graphics.drawPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
+
+    public void reset() {
+
+    }
 }

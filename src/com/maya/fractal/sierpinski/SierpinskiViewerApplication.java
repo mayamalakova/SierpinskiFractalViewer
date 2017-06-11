@@ -64,9 +64,9 @@ public class SierpinskiViewerApplication {
         layout.marginHeight = 5;
         layout.spacing = 5;
         toolbox.setLayout(layout);
+
         addZoomInButton(toolbox);
         addZoomOutButton(toolbox);
-
         addZoomLevelIndicator(toolbox);
 
         Label separator = new Label(toolbox, SWT.VERTICAL | SWT.SEPARATOR);
@@ -76,6 +76,11 @@ public class SierpinskiViewerApplication {
         addButtonDown(toolbox);
         addButtonLeft(toolbox);
         addButtonRight(toolbox);
+
+        separator = new Label(toolbox, SWT.VERTICAL | SWT.SEPARATOR);
+        separator.setLayoutData(new RowData(10, 30));
+
+        addResetButton(toolbox);
     }
 
     private void drawCanvas(Composite composite) {
@@ -83,7 +88,7 @@ public class SierpinskiViewerApplication {
         canvas = new Canvas(canvasContainer, SWT.NONE);
         canvas.setSize(700, 700);
 
-        rootTriangle = new Triangle(0, 30, 600, 20);
+        initRootTriangle();
         final PaintListener paintListener = event -> {
             event.gc.setBackground(event.display.getSystemColor(SWT.COLOR_RED));
             rootTriangle.draw(event.gc);
@@ -91,6 +96,10 @@ public class SierpinskiViewerApplication {
 
 		canvas.addPaintListener(paintListener);
 	}
+
+    private void initRootTriangle() {
+        rootTriangle = new Triangle(0, 30, 600, 20);
+    }
 
     private void addZoomInButton(Composite container) {
         Button zoomIn = createButton(container, " + ");
@@ -111,7 +120,7 @@ public class SierpinskiViewerApplication {
     private void addZoomLevelIndicator(Composite container) {
         zoomLabel = new Label(container, SWT.CENTER);
         zoomLabel.setLayoutData(new RowData(150, 40));
-        updateZoomLevel(0);
+        setZoomLevel(100);
     }
 
     private void addButtonUp(Composite container) {
@@ -134,10 +143,23 @@ public class SierpinskiViewerApplication {
         addButtonListener(right, e -> rootTriangle.shiftX(20));
     }
 
+    private void addResetButton(Composite container) {
+        Button reset = createButton(container, "Reset", 100);
+        addButtonListener(reset, e -> {
+            initRootTriangle();
+            setZoomLevel(100);
+        });
+    }
+
     private Button createButton(Composite container, String label) {
+        Button button = createButton(container, label, 30);
+        return button;
+    }
+
+    private Button createButton(Composite container, String label, int width) {
         Button button = new Button(container, SWT.PUSH);
         button.setText(label);
-        button.setLayoutData(new RowData(30, 30));
+        button.setLayoutData(new RowData(width, 30));
         return button;
     }
 
@@ -158,6 +180,11 @@ public class SierpinskiViewerApplication {
 
     private void updateZoomLevel(int adjustment) {
         zoomLevel = zoomLevel + adjustment;
+        zoomLabel.setText("Zoom level: " + zoomLevel + "%");
+    }
+
+    private void setZoomLevel(int level) {
+        zoomLevel = level;
         zoomLabel.setText("Zoom level: " + zoomLevel + "%");
     }
 }
