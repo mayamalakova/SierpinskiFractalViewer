@@ -7,9 +7,9 @@ import org.eclipse.swt.graphics.GC;
  */
 public class Triangle {
     Edge top, left, right;
-    double size;
-    double minSize;
-    Triangle topChild, leftChild, rightChild;
+    private double size;
+    private double minSize;
+    private Triangle topChild, leftChild, rightChild;
 
     public Triangle(final double x1, final double y1, final double size, final double minSize) {
         this(new Edge(x1, y1), size, minSize);
@@ -19,10 +19,6 @@ public class Triangle {
         this.size = size;
         calculateEdges(left, size);
         this.minSize = minSize;
-
-        if (minSize < size) {
-            createChildren();
-        }
     }
 
     /**
@@ -34,52 +30,39 @@ public class Triangle {
         size = size * quotient;
         right = left.toRight(size);
         top = left.toTop(size);
-        if (leftChild != null) {
-            createChildren();
-        }
     }
 
     /**
-     * Draw thetriangle and its children
+     * Draw the triangle and its children
      * @param graphics the graphics instance to use for drawing
      */
     public void draw(final GC graphics) {
         drawBorder(graphics);
-        if (leftChild == null) {
-            fill(graphics);
-        }
 
-        if (leftChild != null) {
+        if (minSize < size) {
+            createChildren();
             leftChild.draw(graphics);
             rightChild.draw(graphics);
             topChild.draw(graphics);
+        } else {
+            fill(graphics);
         }
     }
 
     /**
      * Shift vertically by the given percentage
-     * @param percent of size to shift
+     * @param by of size to shift
      */
-    public void shiftY(final int percent) {
-        final double quotient = percent / 100d;
-        final double shift = size * quotient;
-        calculateEdges(left.shiftY(shift), size);
-        if (leftChild != null) {
-            createChildren();
-        }
+    public void shiftY(final int by) {
+        calculateEdges(left.shiftY(by), size);
     }
 
     /**
      * Shift horizontally by the given percentage
-     * @param percent of size to shift
+     * @param by size to shift
      */
-    public void shiftX(final int percent) {
-        final double quotient = percent / 100d;
-        final double shift = size * quotient;
-        calculateEdges(left.shiftX(shift), size);
-        if (leftChild != null) {
-            createChildren();
-        }
+    public void shiftX(final int by) {
+        calculateEdges(left.shiftX(by), size);
     }
 
     private void calculateEdges(final Edge left, final double size) {
@@ -99,7 +82,11 @@ public class Triangle {
     }
 
     private void drawBorder(final GC graphics) {
+        //todo rotate it - left.x, left.y -
         graphics.drawPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
 
+    public Edge getLeft() {
+        return left;
+    }
 }

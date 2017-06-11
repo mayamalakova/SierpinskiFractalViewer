@@ -14,6 +14,7 @@ public class SierpinskiViewerApplication {
     private Canvas canvas;
 
     private Triangle rootTriangle;
+    private Label positionLabel;
 
     public SierpinskiViewerApplication(final Shell shell) {
         this.shell = shell;
@@ -72,11 +73,14 @@ public class SierpinskiViewerApplication {
         addButtonLeft(toolbox);
         addButtonRight(toolbox);
 
+        addPositionIndicator(toolbox);
+
         separator = new Label(toolbox, SWT.VERTICAL | SWT.SEPARATOR);
         separator.setLayoutData(new RowData(10, 30));
 
         addResetButton(toolbox);
     }
+
 
     private void drawCanvas(final Composite composite) {
         final Composite canvasContainer = new Composite(composite, SWT.NONE);
@@ -93,7 +97,7 @@ public class SierpinskiViewerApplication {
 	}
 
     private void initRootTriangle() {
-        rootTriangle = new Triangle(0, 30, 600, 20);
+        rootTriangle = new Triangle(0, 0, 600, 20);
     }
 
     private void addZoomInButton(final Composite container) {
@@ -108,27 +112,49 @@ public class SierpinskiViewerApplication {
 
     private void addButtonUp(final Composite container) {
         final Button up = createButton(container, "↑");
-        addButtonListener(up, e -> rootTriangle.shiftY(-20));
+        addButtonListener(up, e -> {
+            rootTriangle.shiftY(50);
+            positionLabel.setText(rootTriangle.getLeft().toString());
+        });
     }
 
     private void addButtonDown(final Composite container) {
         final Button down = createButton(container, "↓");
-        addButtonListener(down, e -> rootTriangle.shiftY(20));
+        addButtonListener(down, e -> {
+            rootTriangle.shiftY(-50);
+            positionLabel.setText(rootTriangle.getLeft().toString());
+        });
     }
 
     private void addButtonLeft(final Composite container) {
         final Button left = createButton(container, "←");
-        addButtonListener(left, e -> rootTriangle.shiftX(-20));
+        addButtonListener(left, e -> {
+            rootTriangle.shiftX(50);
+            positionLabel.setText(rootTriangle.getLeft().toString());
+        });
     }
 
     private void addButtonRight(final Composite container) {
         final Button right = createButton(container, "→");
-        addButtonListener(right, e -> rootTriangle.shiftX(20));
+        addButtonListener(right, e -> {
+            rootTriangle.shiftX(-50);
+            positionLabel.setText(rootTriangle.getLeft().toString());
+        });
     }
 
     private void addResetButton(final Composite container) {
         final Button reset = createButton(container, "Reset", 100);
-        addButtonListener(reset, e -> initRootTriangle());
+        addButtonListener(reset, e -> {
+            initRootTriangle();
+            positionLabel.setText(rootTriangle.getLeft().toString());
+        });
+    }
+
+
+    private void addPositionIndicator(final Composite toolbox) {
+        positionLabel = new Label(toolbox, SWT.CENTER);
+        positionLabel.setLayoutData(new RowData(150, 30));
+        positionLabel.setText("(0.0, 0.0)");
     }
 
     private Button createButton(final Composite container, final String label) {

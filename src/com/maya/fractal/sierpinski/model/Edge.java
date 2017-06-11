@@ -1,5 +1,8 @@
 package com.maya.fractal.sierpinski.model;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 /**
  * A triangle edge
  */
@@ -21,7 +24,8 @@ public class Edge {
 
     @Override
     public String toString() {
-        return String.format(" (%f.3, %f.3) ", x, y);
+        NumberFormat formatter = new DecimalFormat("#0.00");
+        return "(" + formatter.format(x) + ", " + formatter.format(y) + ")";
     }
 
     public Edge toRight(final double size) {
