@@ -17,6 +17,8 @@ public class SierpinskiViewerApplication {
     private static int endX;
     private static int endY;
     private Triangle triangle;
+    private int zoomLevel = 100;
+    private Label zoomLabel;
 
     public SierpinskiViewerApplication(Shell shell) {
         this.shell = shell;
@@ -54,12 +56,18 @@ public class SierpinskiViewerApplication {
 
 	private void drawCanvas(Shell shell) {
         canvas = new Canvas(shell, SWT.NONE);
-		Button zoomIn = new Button(canvas, SWT.PUSH);
-		zoomIn.setBounds(0, 0, 30, 30);
-		zoomIn.setText("+");
+
+        zoomLabel = new Label(canvas, SWT.CENTER);
+        zoomLabel.setBounds(80, 5, 100, 30);
+        zoomLabel.setText(zoomLevel + "%");
+
+        Button zoomIn = new Button(canvas, SWT.PUSH);
+        zoomIn.setBounds(0, 0, 30, 30);
+        zoomIn.setText("+");
         zoomIn.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                updateZoomLevel(20);
                 triangle.zoom(20);
                 canvas.redraw();
             }
@@ -69,12 +77,13 @@ public class SierpinskiViewerApplication {
             }
         });
 
-		Button zoomOut = new Button(canvas, SWT.PUSH);
-		zoomOut.setBounds(40, 0, 30, 30);
-		zoomOut.setText("-");
+        Button zoomOut = new Button(canvas, SWT.PUSH);
+        zoomOut.setBounds(40, 0, 30, 30);
+        zoomOut.setText("-");
         zoomOut.addSelectionListener(new SelectionListener() {
             @Override
             public void widgetSelected(SelectionEvent e) {
+                updateZoomLevel(-20);
                 triangle.zoom(-20);
                 canvas.redraw();
             }
@@ -84,9 +93,6 @@ public class SierpinskiViewerApplication {
             }
         });
 
-        Label label = new Label(canvas, SWT.NONE);
-        label.setBounds(80, 0, 100, 30);
-        label.setText("100%");
 
         triangle = new Triangle(0, 30, 400, 20);
         final PaintListener paintListener = event -> {
@@ -96,4 +102,9 @@ public class SierpinskiViewerApplication {
 
 		canvas.addPaintListener(paintListener);
 	}
+
+    private void updateZoomLevel(int adjustment) {
+        zoomLevel = zoomLevel + adjustment;
+        zoomLabel.setText(zoomLevel + "%");
+    }
 }

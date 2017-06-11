@@ -4,9 +4,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Created by maja on 11/06/17.
- */
 public class TriangleTest {
 
     private Triangle triangle;
@@ -37,6 +34,14 @@ public class TriangleTest {
         Assert.assertEquals(new Edge(0, 0), triangle.left);
         Assert.assertEquals(new Edge(150, 0), triangle.right);
         Assert.assertEquals(new Edge(75, 129.903), triangle.top);
+    }
+
+    @Test
+    public void should_zoom_minus_50() {
+        triangle.zoom(-50);
+        Assert.assertEquals(new Edge(0, 0), triangle.left);
+        Assert.assertEquals(new Edge(50, 0), triangle.right);
+        Assert.assertEquals(new Edge(25, 43.301), triangle.top);
     }
 
 }
