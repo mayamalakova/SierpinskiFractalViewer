@@ -27,7 +27,7 @@ public class Triangle {
 
     /**
      * Zoom the triangle and its children
-     * @param percent
+     * @param percent the zoom percent
      */
     public void zoom(int percent) {
         double quotient = (100.0 + percent)/100;
@@ -41,7 +41,7 @@ public class Triangle {
 
     /**
      * Draw thetriangle and its children
-     * @param graphics
+     * @param graphics the graphics instance to use for drawing
      */
     public void draw(GC graphics) {
         drawBorder(graphics);
@@ -102,7 +102,4 @@ public class Triangle {
         graphics.drawPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
 
-    public void reset() {
-
-    }
 }
