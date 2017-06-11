@@ -58,8 +58,8 @@ public class SierpinskiViewerApplication {
         canvas = new Canvas(shell, SWT.NONE);
 
         zoomLabel = new Label(canvas, SWT.CENTER);
-        zoomLabel.setBounds(80, 5, 100, 30);
-        zoomLabel.setText(zoomLevel + "%");
+        zoomLabel.setBounds(80, 5, 120, 30);
+        updateZoomLevel(0);
 
         Button zoomIn = new Button(canvas, SWT.PUSH);
         zoomIn.setBounds(0, 0, 30, 30);
@@ -105,6 +105,6 @@ public class SierpinskiViewerApplication {
 
     private void updateZoomLevel(int adjustment) {
         zoomLevel = zoomLevel + adjustment;
-        zoomLabel.setText(zoomLevel + "%");
+        zoomLabel.setText("Zoom level: " + zoomLevel + "%");
     }
 }
