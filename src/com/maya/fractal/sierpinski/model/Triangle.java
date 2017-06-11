@@ -11,11 +11,11 @@ public class Triangle {
     double minSize;
     Triangle topChild, leftChild, rightChild;
 
-    public Triangle(double x1, double y1, double size, double minSize) {
+    public Triangle(final double x1, final double y1, final double size, final double minSize) {
         this(new Edge(x1, y1), size, minSize);
     }
 
-    public Triangle(Edge left, double size, double minSize) {
+    public Triangle(final Edge left, final double size, final double minSize) {
         this.size = size;
         calculateEdges(left, size);
         this.minSize = minSize;
@@ -29,8 +29,8 @@ public class Triangle {
      * Zoom the triangle and its children
      * @param percent the zoom percent
      */
-    public void zoom(int percent) {
-        double quotient = (100.0 + percent)/100;
+    public void zoom(final int percent) {
+        final double quotient = (100.0 + percent)/100;
         size = size * quotient;
         right = left.toRight(size);
         top = left.toTop(size);
@@ -43,7 +43,7 @@ public class Triangle {
      * Draw thetriangle and its children
      * @param graphics the graphics instance to use for drawing
      */
-    public void draw(GC graphics) {
+    public void draw(final GC graphics) {
         drawBorder(graphics);
         if (leftChild == null) {
             fill(graphics);
@@ -60,9 +60,9 @@ public class Triangle {
      * Shift vertically by the given percentage
      * @param percent of size to shift
      */
-    public void shiftY(int percent) {
-        double quotient = percent / 100d;
-        double shift = size * quotient;
+    public void shiftY(final int percent) {
+        final double quotient = percent / 100d;
+        final double shift = size * quotient;
         calculateEdges(left.shiftY(shift), size);
         if (leftChild != null) {
             createChildren();
@@ -73,22 +73,22 @@ public class Triangle {
      * Shift horizontally by the given percentage
      * @param percent of size to shift
      */
-    public void shiftX(int percent) {
-        double quotient = percent / 100d;
-        double shift = size * quotient;
+    public void shiftX(final int percent) {
+        final double quotient = percent / 100d;
+        final double shift = size * quotient;
         calculateEdges(left.shiftX(shift), size);
         if (leftChild != null) {
             createChildren();
         }
     }
 
-    private void calculateEdges(Edge left, double size) {
+    private void calculateEdges(final Edge left, final double size) {
         this.left = left;
         this.right = left.toRight(size);
         this.top = left.toTop(size);
     }
 
-    private void fill(GC graphics) {
+    private void fill(final GC graphics) {
         graphics.fillPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
 
@@ -98,7 +98,7 @@ public class Triangle {
         topChild = new Triangle(new Edge(leftChild.top), size / 2, minSize - 1);
     }
 
-    private void drawBorder(GC graphics) {
+    private void drawBorder(final GC graphics) {
         graphics.drawPolygon(new int[]{(int) left.x, (int) left.y, (int) top.x, (int) top.y, (int) right.x, (int) right.y});
     }
 
