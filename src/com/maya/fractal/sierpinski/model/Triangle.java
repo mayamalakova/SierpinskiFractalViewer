@@ -50,7 +50,7 @@ public class Triangle {
     }
 
     /**
-     * Shift vertically by the given percentage
+     * Shift vertically by the given number of pixels
      *
      * @param by of size to shift
      */
@@ -59,7 +59,7 @@ public class Triangle {
     }
 
     /**
-     * Shift horizontally by the given percentage
+     * Shift horizontally by the given number of pixels
      *
      * @param by size to shift
      */
