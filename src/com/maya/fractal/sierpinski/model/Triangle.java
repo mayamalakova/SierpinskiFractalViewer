@@ -23,10 +23,11 @@ public class Triangle {
 
     /**
      * Zoom the triangle and its children
+     *
      * @param percent the zoom percent
      */
     public void zoom(final int percent) {
-        final double quotient = (100.0 + percent)/100;
+        final double quotient = (100.0 + percent) / 100;
         size = size * quotient;
         right = left.toRight(size);
         top = left.toTop(size);
@@ -34,6 +35,7 @@ public class Triangle {
 
     /**
      * Draw the triangle and its children
+     *
      * @param graphics the graphics instance to use for drawing
      */
     public void draw(final GC graphics) {
@@ -49,6 +51,7 @@ public class Triangle {
 
     /**
      * Shift vertically by the given percentage
+     *
      * @param by of size to shift
      */
     public void shiftY(final int by) {
@@ -57,6 +60,7 @@ public class Triangle {
 
     /**
      * Shift horizontally by the given percentage
+     *
      * @param by size to shift
      */
     public void shiftX(final int by) {

@@ -8,7 +8,7 @@ import java.text.NumberFormat;
  */
 public class Edge {
     private static final double E = 0.001;
-    private static final double SIN_60 = Math.sqrt(3)/2;
+    private static final double SIN_60 = Math.sqrt(3) / 2;
 
     public double x, y;
 
@@ -37,7 +37,7 @@ public class Edge {
     }
 
     public Edge bottomMedian(final double size) {
-        return new Edge(x + size/2, y);
+        return new Edge(x + size / 2, y);
     }
 
     public Edge shiftY(final double shift) {

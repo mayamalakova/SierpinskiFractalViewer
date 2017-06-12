@@ -27,12 +27,12 @@ public class SierpinskiViewerApplication {
     }
 
     public static void main(final String[] args) {
-		final Display display = new Display();
+        final Display display = new Display();
         final Shell shell = new Shell(display);
 
         final SierpinskiViewerApplication sierpinskiViewerApplication = new SierpinskiViewerApplication(shell);
         sierpinskiViewerApplication.run();
-	}
+    }
 
     private void run() {
         renderUi(shell);
@@ -54,10 +54,10 @@ public class SierpinskiViewerApplication {
         shell.setLayout(rowLayout);
 
         drawButtons(shell);
-		drawCanvas(shell);
+        drawCanvas(shell);
 
-		shell.setSize(800, 800);
-	}
+        shell.setSize(800, 800);
+    }
 
     private void drawButtons(final Composite composite) {
         final Composite toolbox = new Composite(composite, SWT.NONE);
@@ -98,8 +98,8 @@ public class SierpinskiViewerApplication {
             rootTriangle.draw(event.gc);
         };
 
-		canvas.addPaintListener(paintListener);
-	}
+        canvas.addPaintListener(paintListener);
+    }
 
     private void initRootTriangle() {
         rootTriangle = new Triangle(0, 0, 600, 20);
