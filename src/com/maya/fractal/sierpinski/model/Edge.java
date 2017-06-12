@@ -24,7 +24,7 @@ public class Edge {
 
     @Override
     public String toString() {
-        NumberFormat formatter = new DecimalFormat("#0.00");
+        final NumberFormat formatter = new DecimalFormat("#0.00");
         return "(" + formatter.format(x) + ", " + formatter.format(y) + ")";
     }
 

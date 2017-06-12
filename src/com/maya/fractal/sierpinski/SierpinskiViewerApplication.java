@@ -50,7 +50,6 @@ public class SierpinskiViewerApplication {
     private void renderUi(final Shell shell) {
         final RowLayout rowLayout = new RowLayout();
         rowLayout.type = SWT.VERTICAL;
-        rowLayout.wrap = true;
 
         shell.setLayout(rowLayout);
 
@@ -89,7 +88,7 @@ public class SierpinskiViewerApplication {
     private void drawCanvas(final Composite composite) {
         final Composite canvasContainer = new Composite(composite, SWT.NONE);
         canvas = new Canvas(canvasContainer, SWT.NONE);
-        canvas.setSize(700, 700);
+        canvas.setSize(750, 700);
 
         addMouseListener();
 
